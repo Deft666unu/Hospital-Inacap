@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingreso de Pacientes</title>
+    <link rel="stylesheet" href="miestilo.css">
+</head>
+<body>
+
+<div class="container">
+    
+<div class="header">
+    <div class="header-top">
+        <h1>Hospital Inacap</h1>
+        <img src="inacap-logo.jpg" class="logo">
+    </div>
+    <p>Ingreso de Pacientes</p>
+</div>
+    <div class="contenido">
+        <div class="imagen-box">
+            <img src="doctor.jpg" alt="Hospital">
+            <p>Complete la información del paciente para su registro en el sistema.</p>
+        </div>
+        <form class="formulario"> 
+            <label>Nombre completo</label>
+            <input type="text" id="nombre">
+
+            <label>RUT</label>
+            <input type="text" id="rut" placeholder="Ej: 12.345.678-5">
+
+            <label>Correo electrónico (Gmail)</label>
+            <input type="email" id="correo">
+
+            <label>Número de teléfono</label>
+            <input type="tel" id="telefono" pattern="[0-9]*">
+
+            <label>Motivo de consulta</label>
+            <textarea id="motivo"></textarea>
+
+            <button type="button" onclick="registrar()">Registrar Paciente</button>
+
+        </form>
+    </div>
+    <div id="resultado"></div>
+</div>
+
+<script>
+let pacientes = [];
+function validarRUT(rut) {
+    let regex = /^[0-9]{7,8}-[0-9kK]$/;
+    rut = rut.replace(/\./g, "");
+    return regex.test(rut);
+}
+
+function registrar() {
+    let nombre = document.getElementById("nombre").value;
+    let rut = document.getElementById("rut").value;
+    let correo = document.getElementById("correo").value;
+    let telefono = document.getElementById("telefono").value;
+    let motivo = document.getElementById("motivo").value;
+
+    if (nombre === "" || rut === "" || correo === "" || telefono === "" || motivo === "") {
+        alert("Por favor complete todos los campos");
+        return;
+    }
+
+    if (!validarRUT(rut)) {
+        alert("RUT inválido");
+        return;
+    }
+
+    if (!correo.includes("@gmail.com")) {
+        alert("Debe ingresar un correo Gmail válido");
+        return;
+    }
+
+    if (!/^[0-9]+$/.test(telefono)) {
+        alert("El teléfono solo debe contener números");
+        return;
+    }
+
+    if (telefono.length < 8) {
+        alert("Número de teléfono inválido");
+        return;
+    }
+    pacientes.push({
+        nombre: nombre,
+        rut: rut,
+        correo: correo,
+        telefono: telefono,
+        motivo: motivo
+    });
+    mostrarPacientes();
+}
+function mostrarPacientes() {
+    let contenido = "<h3>Pacientes registrados</h3>";
+    for (let i = 0; i < pacientes.length; i++) {
+        contenido += `
+            <div class="paciente">
+                <strong>${pacientes[i].nombre}</strong><br>
+                RUT: ${pacientes[i].rut}<br>
+                Correo: ${pacientes[i].correo}<br>
+                Teléfono: ${pacientes[i].telefono}<br>
+                Motivo: ${pacientes[i].motivo}
+            </div>
+        `;
+    }
+    document.getElementById("resultado").innerHTML = contenido;
+}
+</script>
+
+</body>
+</html>
